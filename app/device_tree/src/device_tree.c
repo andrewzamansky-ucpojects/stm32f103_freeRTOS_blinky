@@ -15,6 +15,7 @@
 //#define CLOCK_CONTROL_STM32f10X_DT_PLL_SRC_CLK_DEV     stm32f10x_hsirc_clk_dev//stm32f10x_xtal_clk_dev
 //#define CLOCK_CONTROL_STM32f10X_DT_PLL_RATE        72000000
 #define CLOCK_CONTROL_STM32f10X_DT_HCLK_RATE       8000000//72000000
+#define CLOCK_CONTROL_STM32f10X_APB2_RATE          8000000
 
 #include ADD_CURRENT_DEV
 
@@ -39,5 +40,19 @@
 /********** semihosting_dev ********/
 #define DT_DEV_NAME                      semihosting_dev
 #define DT_DEV_MODULE                    semihosting
+
+#include ADD_CURRENT_DEV
+
+
+
+/***********************************/
+/********** heartbeat_gpio_dev ********/
+#define DT_DEV_NAME                      heartbeat_gpio_dev
+#define DT_DEV_MODULE                    gpio_stm32f10x
+
+#define GPIO_STM32F10X_DT_PORT         GPIO_STM32F10X_API_PORT_B
+#define GPIO_STM32F10X_DT_PINS              {10}
+#define GPIO_STM32F10X_DT_PINS_IDLE_STATE   {0}
+#define GPIO_STM32F10X_DT_MODE         GPIO_STM32F10X_API_MODE_OUT_PP
 
 #include ADD_CURRENT_DEV

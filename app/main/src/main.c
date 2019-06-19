@@ -16,6 +16,7 @@
 #include "dev_management_api.h"
 
 #include "os_wrapper.h"
+#include "gpio_api.h"
 
 /***************   defines    *******************/
 
@@ -24,6 +25,7 @@
 
 
 /**********   external variables    **************/
+extern struct dev_desc_t *heartbeat_gpio_dev;
 
 /***********   loacal variables    **************/
 
@@ -39,12 +41,14 @@ static void test_thread_func(void * aHandle)
 {
 	uint32_t cnt;
 	struct dev_desc_t * dev;
+	uint8_t toggle = 0;
 
 	dev = DEV_OPEN("semihosting_dev");
 	if (NULL != dev)
 	{
 		DEV_IOCTL_0_PARAMS(dev, IOCTL_DEVICE_START);
 	}
+	DEV_IOCTL_0_PARAMS(heartbeat_gpio_dev, IOCTL_DEVICE_START);
 
 	cnt = 0;
 	while (1)
@@ -59,6 +63,17 @@ static void test_thread_func(void * aHandle)
 			DEV_WRITE(
 				dev, (uint8_t*)hello_world_str, sizeof(hello_world_str) - 1);
 		}
+
+		toggle = 1 - toggle;
+		if (1 == toggle)
+		{
+			DEV_IOCTL_0_PARAMS(heartbeat_gpio_dev, IOCTL_GPIO_PIN_SET );
+		}
+		else
+		{
+			DEV_IOCTL_0_PARAMS(heartbeat_gpio_dev, IOCTL_GPIO_PIN_CLEAR );
+		}
+
 		os_delay_ms(1000);
 
 		//os_stack_test(); //requires PRINTF_DBG
